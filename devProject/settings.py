@@ -27,8 +27,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG') == 'True'
 
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -130,6 +128,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1'
 ]
+
 
 # settings.py
 # 登录成功后重定向的URL
