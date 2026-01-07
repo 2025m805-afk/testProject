@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ name_ja }} 情報</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        .pokemon-card {
+            border: 2px solid #3b4cca; /* ポケモンっぽい色 */
+            padding: 20px;
+            width: 350px;
+            border-radius: 10px;
+            background-color: #ffde00; /* ポケモンっぽい色 */
+            text-align: center;
+        }
+        .pokemon-card h2 {
+            color: #3b4cca;
+        }
+        .pokemon-image {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ポケモン情報アプリ</h1>
+    <hr>
+    
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% else %}
+    
+    <div class="pokemon-card">
+        <h2>No. {{ id }} {{ name_ja }}</h2>
+        
+        <img src="{{ sprite_url }}" alt="{{ name_ja }}" class="pokemon-image">
+        
+        <p><strong>タイプ:</strong> {{ type }}</p>
+        <p><strong>HP (基本):</strong> {{ hp }}</p>
+        <p><strong>高さ:</strong> {{ height }} m</p>
+        <p><strong>重さ:</strong> {{ weight }} kg</p>
+        
+        <small>※ この情報はPokeAPIから取得されています。</small>
+    </div>
+    
+    {% endif %}
+    
+</body>
+</html>

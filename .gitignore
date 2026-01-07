@@ -1,0 +1,15 @@
+• # .gitignore
+# 仮想環境
+venv/
+.env
+# Pythonキャッシュ
+__pycache__/
+*.pyc
+本番用サーバー(Waitress)を導入する
+# エディタ・OS依存
+.vscode/
+.idea/
+.DS_Store
+# Django特有
+db.sqlite3
+*.log

@@ -1,0 +1,82 @@
+{% extends 'main/base.html' %}
+{% block content %}
+{% for post in posts %}
+{% if query %}
+<h2>「{{ query }}」の検索結果</h2>
+{% endif %}
+<div class="card mb-3">
+    <button class="btn btn-outline-primary like-btn" data-pk="{{ post.pk }}">
+        {% if request.user in post.likes.all %}
+        いいね解除
+        {% else %}
+        いいね
+        {% endif %}
+    </button>
+
+
+    <div class="card-header">
+        {{ post.title }}
+    </div>
+    <div class="card-body">
+        <p class="card-text">{{ post.content|linebreaksbr }}</p>
+    </div>
+    <div class="card-footer text-muted">
+        投稿者: {{ post.author.username }} ({{ post.created_at }})
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'post_detail' post.pk %}">続きを読む</a>
+        <span id="like-count-{{ post.pk }}">{{ post.total_likes }}</span> いいね
+    </div>
+</div>
+{% endfor %}
+{% if not posts %}
+<p>該当する投稿はありませんでした。</p>
+{% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 全てのいいねボタンを取得
+        const likeBtns = document.querySelectorAll('.like-btn');
+        likeBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const postId = this.dataset.pk;
+                const url = `/post/${postId}/like/`;
+                // Fetch APIを使って非同期リクエストを送信
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Djangoのセキュリティ対策(CSRF)を通過するためにトークンを送る
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json(); // サーバーからのJSONを解析
+                    })
+                    .then(data => {
+                        // サーバーからの応答(data)を使って画面を更新
+                        // 1. カウント数を更新
+                        const countSpan = document.getElementById(`like-count-${postId}`);
+                        countSpan.textContent = data.count;
+                        // 2. ボタンの見た目を更新（likedの値によって切り替え）
+                        if (data.liked) {
+                            this.textContent = 'いいね解除';
+                        } else {
+                            this.textContent = 'いいね';
+
+                        }
+                    })
+
+
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('いいねの処理に失敗しました。ログイン状態を確認してください。');
+                    });
+            });
+        });
+    });
+</script>
+
+{% endblock content %}
